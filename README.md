@@ -61,6 +61,10 @@ Install or configure the following:
 - An OpenRouter API key
 
 
+### Configure the database
+
+- Create a project in supabase
+- Run `./database/script.sql` in supabase's SQL Editor 
 
 
 ### Configure the backend

@@ -1,5 +1,5 @@
 from sqlglot import exp, parse
-from sqlglot.errors import ParseError
+from sqlglot.errors import ParseError, TokenError
 
 
 ALLOWED_SCHEMA = "analytics"
@@ -16,8 +16,8 @@ def validate_sql(sql: str, schema: dict) -> str:
 
     try:
         statements = parse(sql, read="postgres")
-    except ParseError as e:
-        raise SQLValidationError(f"Invalid PostgreSQL SQL: {e}") from e
+    except (ParseError, TokenError) as e:
+        raise SQLValidationError(f"The generated SQL is malformed. Please try rephrasing your question.") from e
 
     if len(statements) != 1:
         raise SQLValidationError("Only one SQL statement is allowed")

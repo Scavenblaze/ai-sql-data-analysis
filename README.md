@@ -1,23 +1,13 @@
 # SQL Data Analyst Agent
 
 
-
 An AI-powered analytics application that converts natural-language questions into SQL queries, executes them against a PostgreSQL database and presents the results through interactive tables, charts and AI-generated summaries.
-
-
 
 Ask questions about your data in plain English instead of writing SQL manually.
 
 
-
-
-
 ## Database Schema
-
-
-
 The application uses an e-commerce analytics database with five primary tables.
-
 
 
 | Table | Description |
@@ -28,13 +18,10 @@ The application uses an e-commerce analytics database with five primary tables.
 | `order_items` | Products and quantities associated with each order |
 | `payments` | Payment methods, amounts, and payment statuses |
 
-
 The tables belong to the `analytics` schema.
 
 
-
 ## Example Questions
-
 You can ask questions such as:
 
 - How many customers are there in each country?
@@ -49,32 +36,13 @@ You can ask questions such as:
 The agent generates SQL, validates it, executes it against the database and returns the results with an explanation and a chart (if required).
 
 
-## How to run
-
-### Prerequisites
-
-Install or configure the following:
-
-- Python 3.11 or a compatible Python version
-- Node.js and pnpm
-- A Supabase PostgreSQL database
-- An OpenRouter API key
-
+# How to run
 
 ### Configure the database
-
 - Create a project in supabase
 - Run `./database/script.sql` in supabase's SQL Editor 
 
-
-### Configure the backend
-
-Install the dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
+### Configure backend environment Variables
 Create a `.env` file in the backend directory:
 
 ```env
@@ -84,6 +52,47 @@ OPENROUTER_API_KEY="your_openrouter_api_key"
 ```
 (An example env file has been provided)  
 The analyst connection should use a restricted, read-only database role.
+
+### Configure frontend environment Variables
+
+Create a `.env.local` file in the frontend directory:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+(An example env file has been provided)  
+This variable configures the frontend to communicate with the local FastAPI backend.
+
+
+## Docker Setup
+### Build the app (frontend+backend)
+```bash
+docker compose build --no-cache
+```
+
+### Run Docker Container
+```bash
+docker compose up
+```
+Then navigate to the provided `localhost:port`
+
+
+## Manual Setup
+
+### Prerequisites
+Install or configure the following:
+
+- Python 3.11 or a compatible Python version
+- Node.js and pnpm
+- A Supabase PostgreSQL database
+- An OpenRouter API key
+
+
+### Configure the backend
+Install the dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 Then run:
 ```bash
@@ -95,27 +104,18 @@ To access api docs, navigate to: `http://127.0.0.1:8000/docs`
 
 
 ### Configure the frontend
-
 In the frontend directory:
 
 ```bash
 cd frontend
-pnpm install
+npm install
 ```
-Create a `.env.local` file in the frontend directory:
-
-```env
-VITE_API_BASE_URL=http://127.0.0.1:8000
-```
-
-This variable configures the frontend to communicate with the local FastAPI backend.
 
 Start the frontend using:
 ```bash
-pnpm run dev
+npm run dev
 ```
 Then go to `http://localhost:5173` to access the frontend
-
 
 
 ## API Endpoints
@@ -127,8 +127,6 @@ Then go to `http://localhost:5173` to access the frontend
 | `POST` | `/analyze` | Generates SQL, validates and executes it, and returns analysis results |
 
 
-
-
 ## Testing
 
 Run the backend test suite from the backend directory:
@@ -138,5 +136,5 @@ pytest -v
 ```
 ---
 
-Future Fix:
+Future Fixes:
 - Add a backup model so that it auto switches to second model if the first model is down.

@@ -73,7 +73,7 @@ def database_schema():
     return get_database_schema()
 
     
-@app.post("/analyze", response_model=AnalysisResponse)
+@app.post("/v1/analyze", response_model=AnalysisResponse)
 def analyze(request: AnalysisRequest):
     question = request.question
     try:

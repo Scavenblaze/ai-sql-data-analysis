@@ -27,9 +27,7 @@ def mock_analysis(monkeypatch):
         {"country": "USA", "customer_count": 100},
     ]
 
-    monkeypatch.setattr(
-        main, "get_database_schema", lambda: schema
-    )
+    monkeypatch.setattr(main, "get_database_schema", lambda: schema)
     monkeypatch.setattr(
         main,
         "generate_sql",
@@ -63,7 +61,7 @@ def mock_analysis(monkeypatch):
 
 def test_analyze_success(mock_analysis):
     response = client.post(
-        "/analyze",
+        "/v1/analyze",
         json={
             "question": "Which country has the most customers?"
         },
@@ -85,16 +83,14 @@ def test_analyze_success(mock_analysis):
     assert "SELECT" in data["sql"].upper()
 
 
-def test_analyze_rejects_invalid_sql(
-    mock_analysis, monkeypatch
-):
+def test_analyze_rejects_invalid_sql(mock_analysis, monkeypatch):
     def reject_sql(sql, schema):
         raise SQLValidationError("Only SELECT queries are allowed")
 
     monkeypatch.setattr(main, "validate_sql", reject_sql)
 
     response = client.post(
-        "/analyze",
+        "/v1/analyze",
         json={"question": "Delete all customers"},
     )
 
@@ -102,16 +98,14 @@ def test_analyze_rejects_invalid_sql(
     assert "SQL validation failed" in response.json()["detail"]
 
 
-def test_analyze_handles_execution_error(
-    mock_analysis, monkeypatch
-):
+def test_analyze_handles_execution_error(mock_analysis, monkeypatch):
     def fail_execution(sql):
         raise QueryExecutionError("Query execution failed")
 
     monkeypatch.setattr(main, "execute_query", fail_execution)
 
     response = client.post(
-        "/analyze",
+        "/v1/analyze",
         json={"question": "Which country has the most customers?"},
     )
 
@@ -120,6 +114,6 @@ def test_analyze_handles_execution_error(
 
 
 def test_analyze_requires_question():
-    response = client.post("/analyze", json={})
+    response = client.post("/v1/analyze", json={})
 
     assert response.status_code == 422
